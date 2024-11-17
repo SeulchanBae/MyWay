@@ -5,6 +5,7 @@ import axios from 'axios';
 function Login() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // 성공 메시지 상태 추가
   const [userid, setUserId] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,22 +14,11 @@ function Login() {
   };
 
   const handleLoginClick = async () => {
-
     // 모든 필드가 입력되었는지 확인
     if (!userid || !password) {
       setErrorMessage('정보를 정확하게 입력해주시길 바랍니다.');
       return;
     }
-
-    // 백엔드 API 호출 예시
-    // const response = await fetch('/api/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ userid, password }),
-    // });
-    // const result = await response.json();
 
     let response;
     
@@ -51,6 +41,10 @@ function Login() {
       // 필요 시 입력 필드 초기화
       setUserId('');
       setPassword('');
+      
+      if (response.status === 200) {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Error during login:', error.response ? error.response.data : error.message);
       // 에러 처리
@@ -61,9 +55,6 @@ function Login() {
         // 다른 에러 발생
         setErrorMessage('로그인에 실패했습니다. 다시 시도해주세요.');
       }
-    }
-    if (response.status === 200) {
-      navigate('/');
     }
   };
 
@@ -88,7 +79,7 @@ function Login() {
               type="text"
               placeholder="아이디"
               value={userid}
-              onChange={(e) => setuserid(e.target.value)}
+              onChange={(e) => setUserId(e.target.value)} // 수정된 부분
             />
             <input
               type="password"
@@ -110,6 +101,7 @@ function Login() {
             <button className="footer-button">비밀번호 찾기</button>
           </div>
           {errorMessage && <div className="error-message">{errorMessage}</div>}
+          {successMessage && <div className="success-message">{successMessage}</div>} {/* 성공 메시지 추가 */}
         </main>
       </div>
     </div>
